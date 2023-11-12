@@ -88,9 +88,7 @@ tasks:
     desc: "Build the go binary"
     cmds:
       - echo "Building..."
-      - mkdir -p {{.BUILD_FOLDER}}
-      - cp -rf templates -t {{.BUILD_FOLDER}}
-      - go build -o {{.BUILD_FOLDER}}/ -v -trimpath -ldflags "-w -s -X 'cmd.Version={{.VERSION}}'" ./cmd/...
+      - go build -v -trimpath -ldflags="-w -s -X 'github.com/go-mods/tagsvar/modules/config.Version={{.VERSION}}' -X 'github.com/go-mods/tagsvar/modules/config.BuildDate={{.BUILD_DATE}}'" -o {{.BUILD_FOLDER}}/
     silent: true
 
   update:

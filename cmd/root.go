@@ -1,16 +1,24 @@
 package cmd
 
-import "github.com/spf13/cobra"
-
-var Version = "development"
+import (
+	"github.com/go-mods/tagsvar/modules/config"
+	"github.com/spf13/cobra"
+)
 
 func newRootCmd() *cobra.Command {
 	rootCmd := &cobra.Command{
 		Use:     "tagsvar",
 		Short:   "todo",
 		Long:    "todo",
-		Version: Version,
+		Version: config.C.Version,
 	}
+
+	// Add sub-commands
+	rootCmd.AddCommand(newCleanCmd())
+	rootCmd.AddCommand(newGenCmd())
+
+	//
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
 
 	return rootCmd
 }

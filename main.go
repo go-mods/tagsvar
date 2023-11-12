@@ -1,4 +1,4 @@
-package tagsvar
+package main
 
 import (
 	"github.com/go-mods/tagsvar/cmd"

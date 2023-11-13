@@ -5,6 +5,8 @@ import (
 	configLoader "github.com/golobby/config/v3"
 	"github.com/golobby/config/v3/pkg/feeder"
 	"github.com/rs/zerolog/log"
+	"path/filepath"
+	"strings"
 
 	_ "github.com/go-mods/tagsvar/modules/logger"
 )
@@ -34,8 +36,11 @@ type AppConfig struct {
 	Suffix string `env:"TAGSVAR_SUFFIx" default:".tags"`
 	// Verbose enables verbose output
 	Verbose bool `env:"TAGSVAR_VERBOSE" default:"false"`
+	// Silent disables output
+	Silent bool `env:"TAGSVAR_SILENT" default:"false"`
 }
 
+// init initializes the config
 func init() {
 	// Create an instance of AppConfig
 	C = &AppConfig{}
@@ -44,7 +49,7 @@ func init() {
 	C.load()
 }
 
-// load loads the configuration from environment variables
+// load loads the configuration from default values and environment variables
 func (c *AppConfig) load() {
 
 	// Create the config loader
@@ -67,4 +72,27 @@ func (c *AppConfig) load() {
 func (c *AppConfig) Setup() {
 	c.Version = Version
 	c.BuildDate = BuildDate
+}
+
+// ValidateFileName checks if the file name is valid
+// It must be a .go file
+// It must start with the prefix and end with the suffix
+func (c *AppConfig) ValidateFileName(fileName string) bool {
+	// Get the file name only
+	fileName = filepath.Base(fileName)
+	// Check if the file is a .go file
+	if filepath.Ext(fileName) != ".go" {
+		return false
+	}
+	// Remove the extension
+	fileName = strings.TrimSuffix(fileName, filepath.Ext(fileName))
+	// Check if the file starts with the prefix
+	if !strings.HasPrefix(filepath.Base(fileName), c.Prefix) {
+		return false
+	}
+	// Check if the file ends with the suffix
+	if !strings.HasSuffix(filepath.Base(fileName), c.Suffix) {
+		return false
+	}
+	return true
 }

@@ -13,7 +13,12 @@ import (
 // It is initialized in the init() function
 var C *AppConfig
 
+// Version is the version of the application
+// It is set at build time
 var Version = "development"
+
+// BuildDate is the date of the build
+// It is set at build time
 var BuildDate = "not defined"
 
 // AppConfig holds the configuration of the application
@@ -24,11 +29,11 @@ type AppConfig struct {
 	// BuildDate is the date of the build
 	BuildDate string
 	// Prefix is the prefix of the generated files
-	Prefix string `default:""`
+	Prefix string `env:"TAGSVAR_PREFIX" default:""`
 	// Suffix is the suffix of the generated files
-	Suffix string `default:".tags"`
+	Suffix string `env:"TAGSVAR_SUFFIx" default:".tags"`
 	// Verbose enables verbose output
-	Verbose bool `default:"false"`
+	Verbose bool `env:"TAGSVAR_VERBOSE" default:"false"`
 }
 
 func init() {

@@ -74,14 +74,19 @@ func (c *AppConfig) Setup() {
 	c.BuildDate = BuildDate
 }
 
-// ValidateFileName checks if the file name is valid
+// IsGoFile checks if the file is a .go file
+func (c *AppConfig) IsGoFile(fileName string) bool {
+	return filepath.Ext(fileName) == ".go"
+}
+
+// IsGeneratedFile checks if the file is a generated file
 // It must be a .go file
 // It must start with the prefix and end with the suffix
-func (c *AppConfig) ValidateFileName(fileName string) bool {
+func (c *AppConfig) IsGeneratedFile(fileName string) bool {
 	// Get the file name only
 	fileName = filepath.Base(fileName)
 	// Check if the file is a .go file
-	if filepath.Ext(fileName) != ".go" {
+	if !c.IsGoFile(fileName) {
 		return false
 	}
 	// Remove the extension
@@ -92,6 +97,25 @@ func (c *AppConfig) ValidateFileName(fileName string) bool {
 	}
 	// Check if the file ends with the suffix
 	if !strings.HasSuffix(filepath.Base(fileName), c.Suffix) {
+		return false
+	}
+	return true
+}
+
+// IsProjectFile checks if the file is a project file (not a generated file, neither a test file)
+func (c *AppConfig) IsProjectFile(fileName string) bool {
+	// Get the file name only
+	fileName = filepath.Base(fileName)
+	// Check if the file is a .go file
+	if !c.IsGoFile(fileName) {
+		return false
+	}
+	// Check if the file is a generated file
+	if c.IsGeneratedFile(fileName) {
+		return false
+	}
+	// Check if the file is a test file
+	if strings.HasSuffix(fileName, "_test.go") {
 		return false
 	}
 	return true

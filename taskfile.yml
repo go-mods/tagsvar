@@ -4,6 +4,9 @@ version: '3'
 
 # Define variables to use in tasks
 vars:
+  GO_MODULE:
+    desc: "The name of the go module."
+    sh: go list -m
   GIT_COMMIT:
     desc: "The git commit hash of the current commit."
     sh: git rev-parse --short HEAD

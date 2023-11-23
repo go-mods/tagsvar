@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"github.com/go-mods/tagsvar/modules/config"
+	"github.com/go-mods/tagsvar/modules/fs"
+	"github.com/go-mods/tagsvar/modules/parser"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
@@ -44,4 +46,26 @@ func newGenCmd() *cobra.Command {
 
 // gen command
 func (o *genOptions) gen(cmd *cobra.Command, args []string) {
+	var err error
+
+	// Get the working directory
+	o.Dir, err = fs.WorkDir(o.Dir)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Could not get working directory")
+		return
+	}
+
+	// Info message
+	log.Info().Msgf("Parsing files in %s", o.Dir)
+
+	// Create the parser
+	p := parser.NewParser()
+
+	// Parse the working directory
+	parsedFiles, err := p.ParseDir(o.Dir, o.IsRecursive)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Could not list files project files to parse")
+		return
+	}
+	_ = parsedFiles
 }

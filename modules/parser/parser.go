@@ -13,27 +13,21 @@ import (
 
 type Parser struct {
 
-	// This is the tagsvar preprocessor string
+	// This is the tagsvar preprocessor
 	// It is used by the parser to know if a struct should
 	// be included or not and to know which tags to include
 	//
 	// The default value is #tagsvar
-	preprocessor string
+	preprocessor *Preprocessor
 
-	// This map is used to check if a tag should be included or not
-	// If the length of the map is 0, all tags will be included
-	// The list of tags must be defined with the tagsvar comment:
-	// 	tagsvar:tag1,tag2,tag3 (comma separated list of tags)
-	tags map[string]bool
-
-	// This is used to process all the files even if they don't have the preprocessor
-	processAll bool
+	// This is used to indicate if the file should be processed or not even if the preprocessor is not found
+	forceProcess bool
 }
 
 // NewParser creates a new Parser
 func NewParser() *Parser {
 	return &Parser{
-		preprocessor: "#tagsvar",
+		preprocessor: NewPreprocessor(),
 	}
 }
 
@@ -143,31 +137,17 @@ func (p *Parser) processComment(comment string) (string, bool) {
 	// Split the comment lines
 	lines := strings.Split(comment, "\n")
 
-	// By default the file will not be processed
+	// By default, the file will not be processed
 	// unless the preprocessor is found in the comment
 	process := false
 
 	// Check if the comment is a preprocessor
-	if p.preprocessor != "" && len(lines) > 0 {
+	if p.preprocessor.preprocessor != "" && len(lines) > 0 {
 		for i, line := range lines {
-			if strings.HasPrefix(line, p.preprocessor) {
+			if strings.HasPrefix(line, p.preprocessor.preprocessor) {
 				process = true
-				// Remove the preprocessor
-				line = strings.TrimPrefix(line, p.preprocessor)
-				// Remove the colon
-				line = strings.TrimPrefix(line, ":")
-				// Remove the spaces
-				line = strings.TrimFunc(line, func(r rune) bool { return r == ' ' })
-				// Split the tags
-				tags := strings.Split(line, ",")
-				// Create the map of tags
-				p.tags = make(map[string]bool, len(tags))
-				// Add the tags to the map
-				for _, tag := range tags {
-					if tag != "" {
-						p.tags[tag] = true
-					}
-				}
+				// Initialize the preprocessor tags
+				p.preprocessor.Parse(line)
 				// Remove the comment
 				lines = append(lines[:i], lines[i+1:]...)
 				break
@@ -179,13 +159,11 @@ func (p *Parser) processComment(comment string) (string, bool) {
 	comment = strings.Join(lines, "\n")
 	comment = strings.TrimFunc(comment, func(r rune) bool { return r == ' ' || r == '\r' || r == '\n' })
 
-	// handle exclude
-	if p.tags["exclude"] {
-		return comment, false
-	}
+	//
+	process = p.preprocessor.DoProcess()
 
 	// Process all the files even if the preprocessor is not found
-	if !process && p.processAll {
+	if !process && p.forceProcess {
 		process = true
 	}
 
@@ -269,7 +247,10 @@ func (p *Parser) parseTags(tag *ast.BasicLit) []tags.Tag {
 	// Convert the tags a slice of tags
 	tagsSlice := make([]tags.Tag, 0, len(tagList))
 	for _, t := range tagList {
-		tagsSlice = append(tagsSlice, *t)
+		// check if the tag is in the tags map
+		if p.preprocessor.ShouldProcess(t.Key) {
+			tagsSlice = append(tagsSlice, *t)
+		}
 	}
 	return tagsSlice
 }

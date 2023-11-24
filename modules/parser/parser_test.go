@@ -97,7 +97,7 @@ func TestParser_parseFile(t *testing.T) {
 								Type:    "int",
 								Tags: []tags.Tag{
 									{Key: "json", Name: "id"},
-									{Key: "xml", Name: "id"},
+									//{Key: "xml", Name: "id"},
 									{Key: "gorm", Name: "id"},
 								},
 							},
@@ -107,7 +107,7 @@ func TestParser_parseFile(t *testing.T) {
 								Type:    "Author",
 								Tags: []tags.Tag{
 									{Key: "json", Name: "author"},
-									{Key: "xml", Name: "author"},
+									//{Key: "xml", Name: "author"},
 									{Key: "gorm", Name: "author", Options: []*tags.Option{{Key: "embedded"}}},
 								},
 							},
@@ -117,7 +117,7 @@ func TestParser_parseFile(t *testing.T) {
 								Type:    "int32",
 								Tags: []tags.Tag{
 									{Key: "json", Name: "upvote"},
-									{Key: "xml", Name: "upvote"},
+									//{Key: "xml", Name: "upvote"},
 									{Key: "gorm", Name: "upvote"},
 								},
 							},

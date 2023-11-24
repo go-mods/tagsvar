@@ -11,7 +11,7 @@ type Author struct {
 }
 
 // Blog is a struct that represents an author blog
-// #tagsvar
+// #tagsvar:exclude:xml
 type Blog struct {
 	ID     int    `json:"id"    xml:"id"    gorm:"id"`
 	Author Author `json:"author" xml:"author" gorm:"author,embedded"`

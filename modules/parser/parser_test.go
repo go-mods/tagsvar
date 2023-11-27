@@ -11,9 +11,9 @@ func TestParser_parseFile(t *testing.T) {
 		parsed   *File
 	}{
 		{
-			filename: "./testdata/user.go",
+			filename: "../../.testdata/user.go",
 			parsed: &File{
-				Path:    "./testdata/user.go",
+				Path:    "../../.testdata/user.go",
 				Package: "testdata",
 				Structs: []Struct{
 					{
@@ -46,9 +46,9 @@ func TestParser_parseFile(t *testing.T) {
 			},
 		},
 		{
-			filename: "./testdata/blog_author.go",
+			filename: "../../.testdata/blog_author.go",
 			parsed: &File{
-				Path:    "./testdata/blog_author.go",
+				Path:    "../../.testdata/blog_author.go",
 				Package: "testdata",
 				Structs: []Struct{
 					{
@@ -62,7 +62,13 @@ func TestParser_parseFile(t *testing.T) {
 								Tags: []tags.Tag{
 									{Key: "json", Name: "id"},
 									{Key: "xml", Name: "id"},
-									{Key: "gorm", Name: "id"},
+									{Key: "gorm", Name: "id",
+										Options: []*tags.Option{
+											{Key: "type", Value: "uuid"},
+											{Key: "default", Value: "uuid_generate_v4()"},
+											{Key: "primary_key", Value: nil},
+										},
+									},
 								},
 							},
 							{
@@ -72,7 +78,12 @@ func TestParser_parseFile(t *testing.T) {
 								Tags: []tags.Tag{
 									{Key: "json", Name: "name"},
 									{Key: "xml", Name: "name"},
-									{Key: "gorm", Name: "name"},
+									{Key: "gorm", Name: "name",
+										Options: []*tags.Option{
+											{Key: "type", Value: "varchar(255)"},
+											{Key: "not null", Value: nil},
+										},
+									},
 								},
 							},
 							{
@@ -127,7 +138,7 @@ func TestParser_parseFile(t *testing.T) {
 			},
 		},
 		{
-			filename: "./testdata/exclude_struct.go",
+			filename: "../../.testdata/exclude_struct.go",
 			parsed:   nil,
 		},
 	}

@@ -2,13 +2,10 @@ package config
 
 import (
 	myfeeder "github.com/go-mods/tagsvar/modules/config/feeder"
+	_ "github.com/go-mods/tagsvar/modules/logger"
 	configLoader "github.com/golobby/config/v3"
 	"github.com/golobby/config/v3/pkg/feeder"
 	"github.com/rs/zerolog/log"
-	"path/filepath"
-	"strings"
-
-	_ "github.com/go-mods/tagsvar/modules/logger"
 )
 
 // C is the global config
@@ -33,7 +30,7 @@ type AppConfig struct {
 	// Prefix is the prefix of the generated files
 	Prefix string `env:"TAGSVAR_PREFIX" default:""`
 	// Suffix is the suffix of the generated files
-	Suffix string `env:"TAGSVAR_SUFFIx" default:".tags"`
+	Suffix string `env:"TAGSVAR_SUFFIx" default:".vars"`
 	// Verbose enables verbose output
 	Verbose bool `env:"TAGSVAR_VERBOSE" default:"false"`
 	// Silent disables output
@@ -72,51 +69,4 @@ func (c *AppConfig) load() {
 func (c *AppConfig) Setup() {
 	c.Version = Version
 	c.BuildDate = BuildDate
-}
-
-// IsGoFile checks if the file is a .go file
-func (c *AppConfig) IsGoFile(fileName string) bool {
-	return filepath.Ext(fileName) == ".go"
-}
-
-// IsGeneratedFile checks if the file is a generated file
-// It must be a .go file
-// It must start with the prefix and end with the suffix
-func (c *AppConfig) IsGeneratedFile(fileName string) bool {
-	// Get the file name only
-	fileName = filepath.Base(fileName)
-	// Check if the file is a .go file
-	if !c.IsGoFile(fileName) {
-		return false
-	}
-	// Remove the extension
-	fileName = strings.TrimSuffix(fileName, filepath.Ext(fileName))
-	// Check if the file starts with the prefix
-	if !strings.HasPrefix(filepath.Base(fileName), c.Prefix) {
-		return false
-	}
-	// Check if the file ends with the suffix
-	if !strings.HasSuffix(filepath.Base(fileName), c.Suffix) {
-		return false
-	}
-	return true
-}
-
-// IsProjectFile checks if the file is a project file (not a generated file, neither a test file)
-func (c *AppConfig) IsProjectFile(fileName string) bool {
-	// Get the file name only
-	fileName = filepath.Base(fileName)
-	// Check if the file is a .go file
-	if !c.IsGoFile(fileName) {
-		return false
-	}
-	// Check if the file is a generated file
-	if c.IsGeneratedFile(fileName) {
-		return false
-	}
-	// Check if the file is a test file
-	if strings.HasSuffix(fileName, "_test.go") {
-		return false
-	}
-	return true
 }

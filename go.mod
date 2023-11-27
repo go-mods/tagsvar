@@ -3,13 +3,14 @@ module github.com/go-mods/tagsvar
 go 1.21.0
 
 require (
-	github.com/go-mods/tags v1.1.0
+	github.com/go-mods/tags v1.1.3
 	github.com/go-mods/zerolog-quick v0.1.0
 	github.com/golobby/cast v1.3.3
 	github.com/golobby/config/v3 v3.4.2
 	github.com/mattn/go-isatty v0.0.20
 	github.com/rs/zerolog v1.31.0
 	github.com/spf13/cobra v1.8.0
+	github.com/stoewer/go-strcase v1.3.0
 )
 
 require (

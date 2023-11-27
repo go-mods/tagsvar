@@ -58,7 +58,7 @@ func (o *cleanOptions) clean(cmd *cobra.Command, args []string) {
 	log.Info().Msgf("Cleaning directory %s", o.Dir)
 
 	// List files to delete
-	files, err := fs.ListFiles(o.Dir, o.IsRecursive, config.C.IsGeneratedFile)
+	files, err := fs.ListFiles(o.Dir, o.IsRecursive, fs.IsGeneratedFile)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Could not list generated files to delete")
 		return

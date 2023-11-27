@@ -140,8 +140,6 @@ func (p *Preprocessor) Parse(s string) {
 		}
 		return
 	}
-
-	return
 }
 
 // DoProcess returns true if the struct should be included and false if the struct should be excluded

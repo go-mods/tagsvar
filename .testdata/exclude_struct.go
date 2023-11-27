@@ -13,3 +13,8 @@ type ExcludeStruct struct {
 type AnotherExcludeStruct struct {
 	ID int `json:"id"    xml:"id"    gorm:"id"`
 }
+
+// YetAnotherExcludeStruct is a struct which should be excluded
+type YetAnotherExcludeStruct struct {
+	ID int `json:"id"    xml:"id"    gorm:"id"`
+}

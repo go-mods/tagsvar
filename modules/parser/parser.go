@@ -2,12 +2,12 @@ package parser
 
 import (
 	"github.com/go-mods/tags"
-	"github.com/go-mods/tagsvar/modules/config"
 	"github.com/go-mods/tagsvar/modules/fs"
 	"go/ast"
 	"go/parser"
 	"go/token"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -34,14 +34,14 @@ func NewParser() *Parser {
 // ParseDir parses a directory and returns a map of parsed File
 // It extracts the package name, the structs, the fields and the tags from the files
 // It will be used to generate the variables files
-func (p *Parser) ParseDir(path string, recursive bool) (map[string]*File, error) {
+func (p *Parser) ParseDir(path string, recursive bool) (map[FilePath]*File, error) {
 	// List files to parse
-	files, err := fs.ListFiles(path, recursive, config.C.IsProjectFile)
+	files, err := fs.ListFiles(path, recursive, fs.IsProjectFile)
 	if err != nil {
 		return nil, err
 	}
 	// Slice of parsed files
-	parsedFiles := make(map[string]*File)
+	parsedFiles := make(map[FilePath]*File)
 
 	// Parse the files
 	for _, filename := range files {
@@ -49,7 +49,7 @@ func (p *Parser) ParseDir(path string, recursive bool) (map[string]*File, error)
 		if err != nil {
 			return nil, err
 		}
-		parsedFiles[filename] = parsedFile
+		parsedFiles[FilePath(filename)] = parsedFile
 	}
 	return parsedFiles, nil
 }
@@ -61,7 +61,7 @@ func (p *Parser) ParseFile(filename string) (*File, error) {
 	var err error
 
 	// Read the file
-	content, err := os.ReadFile(filename)
+	content, err := os.ReadFile(filepath.Clean(filename))
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +84,7 @@ func (p *Parser) parseFile(filename string, content []byte) (*File, error) {
 
 	// Create the parsed File
 	parsedFile := &File{}
-	parsedFile.Path = filename
+	parsedFile.Path = FilePath(filename)
 	parsedFile.Package = astFile.Name.Name
 
 	// Inspect the AST
@@ -145,7 +145,6 @@ func (p *Parser) processComment(comment string) (string, bool) {
 	if p.preprocessor.preprocessor != "" && len(lines) > 0 {
 		for i, line := range lines {
 			if strings.HasPrefix(line, p.preprocessor.preprocessor) {
-				process = true
 				// Initialize the preprocessor tags
 				p.preprocessor.Parse(line)
 				// Remove the comment
@@ -194,6 +193,16 @@ func (p *Parser) parseStruct(typeSpec *ast.TypeSpec, comment string) (*Struct, e
 			parsedField.Comment = comment
 			parsedField.Type = p.parseType(field.Type)
 			parsedField.Tags = p.parseTags(field.Tag)
+
+			// Add the tag keys to the struct if not already added
+			for _, tag := range parsedField.Tags {
+				if parsedStruct.TagKeys == nil {
+					parsedStruct.TagKeys = make([]string, 0)
+				}
+				if !parsedStruct.ContainsTag(tag.Key) {
+					parsedStruct.TagKeys = append(parsedStruct.TagKeys, tag.Key)
+				}
+			}
 
 			// Add the field to the struct
 			parsedStruct.Fields = append(parsedStruct.Fields, *parsedField)

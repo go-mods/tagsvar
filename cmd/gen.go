@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/go-mods/tagsvar/modules/config"
 	"github.com/go-mods/tagsvar/modules/fs"
+	"github.com/go-mods/tagsvar/modules/generator"
 	"github.com/go-mods/tagsvar/modules/parser"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -61,11 +62,20 @@ func (o *genOptions) gen(cmd *cobra.Command, args []string) {
 	// Create the parser
 	p := parser.NewParser()
 
+	// Create the generator
+	g := generator.NewGenerator()
+
 	// Parse the working directory
 	parsedFiles, err := p.ParseDir(o.Dir, o.IsRecursive)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Could not list files project files to parse")
 		return
 	}
-	_ = parsedFiles
+
+	// Generate the variables files
+	err = g.Generate(parsedFiles)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Could not generate variables files")
+		return
+	}
 }

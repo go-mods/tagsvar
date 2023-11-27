@@ -1,7 +1,7 @@
 # tagsvar
 
-[![GoDoc](https://godoc.org/github.com/go-mods/tagsvar?status.svg)](https://godoc.org/github.com/go-mods/tags)
-[![Go Report Card](https://goreportcard.com/badge/github.com/go-mods/tagsvar)](https://goreportcard.com/report/github.com/go-mods/tags)
+[![GoDoc](https://godoc.org/github.com/go-mods/tagsvar?status.svg)](https://godoc.org/github.com/go-mods/tagsvar)
+[![Go Report Card](https://goreportcard.com/badge/github.com/go-mods/tagsvar)](https://goreportcard.com/report/github.com/go-mods/tagsvar)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/go-mods/tagsvar/blob/master/LICENSE)
 
 `tagsvar` is a Go module that generates Go code for managing struct tags. It reads the struct tags from your Go files and generates constants and variables that you can use in your code.

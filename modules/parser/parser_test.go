@@ -1,8 +1,9 @@
 package parser
 
 import (
-	"github.com/go-mods/tags"
 	"testing"
+
+	"github.com/go-mods/tags"
 )
 
 func TestParser_parseFile(t *testing.T) {

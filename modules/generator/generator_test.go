@@ -1,8 +1,9 @@
 package generator
 
 import (
-	"github.com/go-mods/tagsvar/modules/parser"
 	"testing"
+
+	"github.com/go-mods/tagsvar/modules/parser"
 )
 
 func TestGenerator_generateFile(t *testing.T) {

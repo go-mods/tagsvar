@@ -1,10 +1,11 @@
 package fs
 
 import (
-	"github.com/go-mods/tagsvar/modules/config"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/go-mods/tagsvar/modules/config"
 )
 
 // ListFiles lists files in a directory

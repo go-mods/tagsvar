@@ -1,14 +1,16 @@
 package parser
 
 import (
-	"github.com/go-mods/tags"
-	"github.com/go-mods/tagsvar/modules/fs"
 	"go/ast"
 	"go/parser"
 	"go/token"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/go-mods/tags"
+
+	"github.com/go-mods/tagsvar/modules/fs"
 )
 
 type Parser struct {

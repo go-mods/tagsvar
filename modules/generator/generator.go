@@ -3,15 +3,17 @@ package generator
 import (
 	"bytes"
 	"fmt"
-	"github.com/go-mods/tags"
-	"github.com/go-mods/tagsvar/modules/config"
-	"github.com/go-mods/tagsvar/modules/parser"
-	"github.com/rs/zerolog/log"
-	"github.com/stoewer/go-strcase"
 	"go/format"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/go-mods/tags"
+	"github.com/rs/zerolog/log"
+	"github.com/stoewer/go-strcase"
+
+	"github.com/go-mods/tagsvar/modules/config"
+	"github.com/go-mods/tagsvar/modules/parser"
 )
 
 type Generator struct {

@@ -1,13 +1,14 @@
 package cmd
 
 import (
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
+	"github.com/spf13/cobra"
+
 	"github.com/go-mods/tagsvar/modules/config"
 	"github.com/go-mods/tagsvar/modules/fs"
 	"github.com/go-mods/tagsvar/modules/generator"
 	"github.com/go-mods/tagsvar/modules/parser"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
-	"github.com/spf13/cobra"
 )
 
 // gen command options

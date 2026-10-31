@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/go-mods/tagsvar/cmd"
 	"os"
+
+	"github.com/go-mods/tagsvar/cmd"
 )
 
 func main() {

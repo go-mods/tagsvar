@@ -1,5 +1,6 @@
-# Auto detect text files and perform LF normalization
-*                   text=auto
+# LF line endings for every text file, whatever core.autocrlf is set to
+# (.editorconfig requires end_of_line = lf and editorconfig-checker verifies it)
+*                   text=auto eol=lf
 
 # Collapse generated and vendored files on GitHub
 AUTHORS             linguist-generated merge=union

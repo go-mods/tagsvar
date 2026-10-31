@@ -1,8 +1,9 @@
 package cmd
 
 import (
-	"github.com/go-mods/tagsvar/modules/config"
 	"github.com/spf13/cobra"
+
+	"github.com/go-mods/tagsvar/modules/config"
 )
 
 func newRootCmd() *cobra.Command {

@@ -3,10 +3,11 @@ package feeder
 import (
 	"errors"
 	"fmt"
-	"github.com/golobby/cast"
 	"reflect"
 	"time"
 	"unsafe"
+
+	"github.com/golobby/cast"
 )
 
 // Default feeder.
@@ -24,7 +25,7 @@ type Default struct{}
 func (f Default) Feed(structure interface{}) error {
 	inputType := reflect.TypeOf(structure)
 	if inputType != nil {
-		if inputType.Kind() == reflect.Ptr {
+		if inputType.Kind() == reflect.Pointer {
 			if inputType.Elem().Kind() == reflect.Struct {
 				return f.fillStruct(reflect.ValueOf(structure).Elem())
 			}
@@ -42,7 +43,7 @@ func (f Default) fillStruct(s reflect.Value) error {
 			if s.Type().Field(i).Type.String() == "time.Duration" {
 				d, err := time.ParseDuration(t)
 				if err != nil {
-					return fmt.Errorf("default: cannot set `%v` field; err: %v", s.Type().Field(i).Name, err)
+					return fmt.Errorf("default: cannot set `%v` field; err: %w", s.Type().Field(i).Name, err)
 				}
 				// #nosec G103
 				ptr := reflect.NewAt(s.Field(i).Type(), unsafe.Pointer(s.Field(i).UnsafeAddr())).Elem()
@@ -50,7 +51,7 @@ func (f Default) fillStruct(s reflect.Value) error {
 			} else {
 				v, err := cast.FromType(t, s.Type().Field(i).Type)
 				if err != nil {
-					return fmt.Errorf("default: cannot set `%v` field; err: %v", s.Type().Field(i).Name, err)
+					return fmt.Errorf("default: cannot set `%v` field; err: %w", s.Type().Field(i).Name, err)
 				}
 				// #nosec G103
 				ptr := reflect.NewAt(s.Field(i).Type(), unsafe.Pointer(s.Field(i).UnsafeAddr())).Elem()
@@ -60,7 +61,7 @@ func (f Default) fillStruct(s reflect.Value) error {
 			if err := f.fillStruct(s.Field(i)); err != nil {
 				return err
 			}
-		} else if s.Type().Field(i).Type.Kind() == reflect.Ptr {
+		} else if s.Type().Field(i).Type.Kind() == reflect.Pointer {
 			if !s.Field(i).IsZero() && s.Field(i).Elem().Type().Kind() == reflect.Struct {
 				if err := f.fillStruct(s.Field(i).Elem()); err != nil {
 					return err

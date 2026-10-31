@@ -1,12 +1,13 @@
 package logger
 
 import (
+	"os"
+
 	"github.com/go-mods/zerolog-quick/console/colored"
 	"github.com/go-mods/zerolog-quick/console/plain"
 	"github.com/mattn/go-isatty"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"os"
 )
 
 var isTerm = isatty.IsTerminal(os.Stdout.Fd()) || isatty.IsCygwinTerminal(os.Stdout.Fd())

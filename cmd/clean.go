@@ -1,12 +1,14 @@
 package cmd
 
 import (
-	"github.com/go-mods/tagsvar/modules/config"
-	"github.com/go-mods/tagsvar/modules/fs"
+	"os"
+
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
-	"os"
+
+	"github.com/go-mods/tagsvar/modules/config"
+	"github.com/go-mods/tagsvar/modules/fs"
 )
 
 // clean command options

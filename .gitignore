@@ -150,3 +150,9 @@ coverage.*
 temp/
 
 *todo*
+
+# Built binary (task go:build)
+/build/
+
+# Task cache (checksums of sources)
+.task/checksum/

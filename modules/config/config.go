@@ -1,11 +1,12 @@
 package config
 
 import (
-	myfeeder "github.com/go-mods/tagsvar/modules/config/feeder"
-	_ "github.com/go-mods/tagsvar/modules/logger"
 	configLoader "github.com/golobby/config/v3"
 	"github.com/golobby/config/v3/pkg/feeder"
 	"github.com/rs/zerolog/log"
+
+	myfeeder "github.com/go-mods/tagsvar/modules/config/feeder"
+	_ "github.com/go-mods/tagsvar/modules/logger"
 )
 
 // C is the global config

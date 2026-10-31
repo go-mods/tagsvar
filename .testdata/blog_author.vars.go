@@ -2,7 +2,7 @@
 
 package testdata
 
-// File: ../../.testdata/blog_author.go
+// File: blog_author.go
 
 // Struct: Author
 // Author is a struct that represents an author

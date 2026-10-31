@@ -28,6 +28,10 @@ func init() {
 		{".", cwd},
 		{"..", filepath.Join(cwd, "..")},
 		{"../fs", filepath.Join(cwd, "../fs")},
+		// An absolute path is used as is, whatever the system
+		{filepath.Dir(cwd), filepath.Dir(cwd)},
+		// The directory of a file is used
+		{filepath.Join(cwd, "dirs.go"), cwd},
 	}
 }
 

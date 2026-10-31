@@ -2,7 +2,7 @@
 
 package testdata
 
-// File: ../../.testdata/user.go
+// File: user.go
 
 // Struct: User
 // User is a struct that represents a user

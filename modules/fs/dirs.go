@@ -23,9 +23,8 @@ func WorkDir(root ...string) (string, error) {
 
 // workDir returns the working directory
 func workDir(cwd string, path string) (string, error) {
-	// If the path has no volume name, the current directory is used
-	// and the path is relative to the current directory
-	if filepath.VolumeName(path) == "" {
+	// A relative path is relative to the current directory
+	if !filepath.IsAbs(path) {
 		path = filepath.Join(cwd, path)
 	}
 

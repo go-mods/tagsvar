@@ -27,17 +27,6 @@ func copyToTemp(t *testing.T, name string) string {
 	return path
 }
 
-// withoutFileHeader removes the "// File:" line, which holds the path of the source file
-func withoutFileHeader(code []byte) []byte {
-	var out [][]byte
-	for line := range bytes.SplitSeq(code, []byte("\n")) {
-		if !bytes.HasPrefix(line, []byte("// File: ")) {
-			out = append(out, line)
-		}
-	}
-	return bytes.Join(out, []byte("\n"))
-}
-
 func TestGenerator_generateFile(t *testing.T) {
 	tests := []struct {
 		source    string
@@ -77,7 +66,7 @@ func TestGenerator_generateFile(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if !bytes.Equal(withoutFileHeader(got), withoutFileHeader(want)) {
+			if !bytes.Equal(got, want) {
 				t.Errorf("generated file differs from %s:\n%s", tt.reference, got)
 			}
 		})

@@ -1,6 +1,8 @@
 package config
 
 import (
+	"runtime/debug"
+
 	configLoader "github.com/golobby/config/v3"
 	"github.com/golobby/config/v3/pkg/feeder"
 	"github.com/rs/zerolog/log"
@@ -14,8 +16,9 @@ import (
 var C *AppConfig
 
 // Version is the version of the application
-// It is set at build time
-var Version = "development"
+// It is set at build time (task go:build). Otherwise, the version of the module
+// recorded by go install is used, then "development".
+var Version = ""
 
 // BuildDate is the date of the build
 // It is set at build time
@@ -68,6 +71,18 @@ func (c *AppConfig) load() {
 
 // Setup : this function is called while the config is loaded by golobby/config
 func (c *AppConfig) Setup() {
-	c.Version = Version
+	c.Version = appVersion()
 	c.BuildDate = BuildDate
+}
+
+// appVersion returns the version set at build time, or the version of the module
+// recorded by go install (github.com/go-mods/tagsvar@v1.2.3 gives v1.2.3)
+func appVersion() string {
+	if Version != "" {
+		return Version
+	}
+	if info, ok := debug.ReadBuildInfo(); ok && info.Main.Version != "" && info.Main.Version != "(devel)" {
+		return info.Main.Version
+	}
+	return "development"
 }

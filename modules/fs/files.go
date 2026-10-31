@@ -19,9 +19,13 @@ func ListFiles(dir string, recursive bool, filter func(string) bool) ([]string, 
 			return err
 		}
 
-		// Skip directories if recursive is false
-		if info.IsDir() && !recursive {
-			return filepath.SkipDir
+		// Directories are never listed. The root directory is always walked,
+		// its subdirectories only if recursive is true.
+		if info.IsDir() {
+			if path != dir && !recursive {
+				return filepath.SkipDir
+			}
+			return nil
 		}
 
 		// Get the file name

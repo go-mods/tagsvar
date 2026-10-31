@@ -139,18 +139,20 @@ func (p *Parser) processComment(comment string) (string, bool) {
 	// Split the comment lines
 	lines := strings.Split(comment, "\n")
 
-	// By default, the file will not be processed
-	// unless the preprocessor is found in the comment
-	process := false
+	// Each declaration starts from a fresh preprocessor state:
+	// the directive of a previous declaration must not apply to this one
+	p.preprocessor = NewPreprocessor()
 
-	// Check if the comment is a preprocessor
-	if p.preprocessor.preprocessor != "" && len(lines) > 0 {
+	// Check if the comment contains the preprocessor directive
+	found := false
+	if p.preprocessor.preprocessor != "" {
 		for i, line := range lines {
 			if strings.HasPrefix(line, p.preprocessor.preprocessor) {
 				// Initialize the preprocessor tags
 				p.preprocessor.Parse(line)
-				// Remove the comment
+				// Remove the directive from the comment
 				lines = append(lines[:i], lines[i+1:]...)
+				found = true
 				break
 			}
 		}
@@ -160,15 +162,12 @@ func (p *Parser) processComment(comment string) (string, bool) {
 	comment = strings.Join(lines, "\n")
 	comment = strings.TrimFunc(comment, func(r rune) bool { return r == ' ' || r == '\r' || r == '\n' })
 
-	//
-	process = p.preprocessor.DoProcess()
-
-	// Process all the files even if the preprocessor is not found
-	if !process && p.forceProcess {
-		process = true
+	// A declaration without the directive is not processed, unless forceProcess is set
+	if !found {
+		return comment, p.forceProcess
 	}
 
-	return comment, process
+	return comment, p.preprocessor.DoProcess()
 }
 
 func (p *Parser) parseStruct(typeSpec *ast.TypeSpec, comment string) (*Struct, error) {

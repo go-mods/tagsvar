@@ -129,3 +129,31 @@ func TestPreprocessor_Init(t *testing.T) {
 		}
 	}
 }
+
+func TestPreprocessor_ParseResetsTags(t *testing.T) {
+	tests := []struct {
+		name     string
+		previous string
+		comment  string
+	}{
+		{name: "include all after include list", previous: "#tagsvar:include:json", comment: "#tagsvar:include:all"},
+		{name: "include after include list", previous: "#tagsvar:include:json", comment: "#tagsvar:include"},
+		{name: "directive after exclude list", previous: "#tagsvar:exclude:xml", comment: "#tagsvar"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := NewPreprocessor()
+			p.Parse(tt.previous)
+			p.Parse(tt.comment)
+			if p.IncludeTags != nil || p.ExcludeTags != nil {
+				t.Errorf("Parse(%q) after %q: IncludeTags = %v, ExcludeTags = %v, want nil",
+					tt.comment, tt.previous, p.IncludeTags, p.ExcludeTags)
+			}
+			for _, tag := range []string{"json", "xml", "gorm"} {
+				if !p.ShouldProcess(tag) {
+					t.Errorf("ShouldProcess(%q) = false, want true", tag)
+				}
+			}
+		})
+	}
+}

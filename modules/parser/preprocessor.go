@@ -116,6 +116,7 @@ func (p *Preprocessor) Parse(s string) {
 		if split[1] == "include" {
 			p.Include = true
 			if split[2] == "all" {
+				p.IncludeTags = nil
 			} else {
 				p.IncludeTags = strings.Split(split[2], ",")
 			}

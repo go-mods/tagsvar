@@ -43,30 +43,24 @@ func (g *Generator) Generate(files map[parser.FilePath]*parser.File) error {
 // generateFile generates the variables file
 func (g *Generator) generateFile(file *parser.File) error {
 
-	// Construct the file path where the variables file will be generated
-	filePath := string(file.Path)
-	filePath = strings.TrimSuffix(filePath, filepath.Ext(filePath))
-	filePath = config.C.Prefix + filePath + config.C.Suffix + ".go"
-
 	// Generate the code to write to the file
 	genCode, err := g.generateCode(file)
 	if err != nil {
 		return err
 	}
 
-	// Create the file
-	genFile, err := os.Create(filepath.Clean(filePath))
-	if err != nil {
-		return err
-	}
+	// Write the code next to the source file
+	// #nosec G306 -- a generated source file is readable like the other source files
+	return os.WriteFile(generatedPath(string(file.Path)), genCode, 0o644)
+}
 
-	// Write the code to the file
-	_, err = genFile.Write(genCode)
-	if err != nil {
-		return err
-	}
-
-	return nil
+// generatedPath returns the path of the variables file generated for a source file:
+// same directory, file name surrounded by the configured prefix and suffix
+// (user.go gives user.vars.go with the default configuration)
+func generatedPath(sourcePath string) string {
+	dir, name := filepath.Split(filepath.Clean(sourcePath))
+	name = strings.TrimSuffix(name, filepath.Ext(name))
+	return filepath.Join(dir, config.C.Prefix+name+config.C.Suffix+".go")
 }
 
 // generateCode generates the code for the variables file

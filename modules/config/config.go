@@ -31,7 +31,7 @@ type AppConfig struct {
 	// Prefix is the prefix of the generated files
 	Prefix string `env:"TAGSVAR_PREFIX" default:""`
 	// Suffix is the suffix of the generated files
-	Suffix string `env:"TAGSVAR_SUFFIx" default:".vars"`
+	Suffix string `env:"TAGSVAR_SUFFIX" default:".vars"`
 	// Verbose enables verbose output
 	Verbose bool `env:"TAGSVAR_VERBOSE" default:"false"`
 	// Silent disables output

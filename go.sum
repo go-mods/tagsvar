@@ -6,8 +6,8 @@ github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ3
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/go-mods/tags v1.1.4 h1:GK4LsASSRu7Wv4WR6yqHPquzW4RwZaPSihA6hvxIBoY=
-github.com/go-mods/tags v1.1.4/go.mod h1:z6hA6jJidWVxU+YElmCvv5/r14uumU8Ub96TEHmg2V4=
+github.com/go-mods/tags v1.1.5 h1:GcDHiMAUEi6Ztp7w1MgqBVHi1sDz+MIYHsnoXaZPcnY=
+github.com/go-mods/tags v1.1.5/go.mod h1:z6hA6jJidWVxU+YElmCvv5/r14uumU8Ub96TEHmg2V4=
 github.com/go-mods/zerolog-quick v0.2.0 h1:GoMX1d1PzdcK3dbsAFp31LOYiy2lHpq8jZYXjZrYhZY=
 github.com/go-mods/zerolog-quick v0.2.0/go.mod h1:/4ADlUKHRLaOEoQkB34EywQkB8kUVtDvOdgZHcMgg7w=
 github.com/golobby/cast v1.3.3 h1:s2Lawb9RMz7YyYf8IrfMQY4IFmA1R/lgfmj97Vc6fig=

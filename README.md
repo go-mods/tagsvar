@@ -1,71 +1,82 @@
 # tagsvar
 
-[![GoDoc](https://godoc.org/github.com/go-mods/tagsvar?status.svg)](https://godoc.org/github.com/go-mods/tagsvar)
+[![Go Reference](https://pkg.go.dev/badge/github.com/go-mods/tagsvar.svg)](https://pkg.go.dev/github.com/go-mods/tagsvar)
+[![Go Version](https://img.shields.io/badge/Go-1.26+-00ADD8?logo=go)](https://go.dev/)
 [![Go Report Card](https://goreportcard.com/badge/github.com/go-mods/tagsvar)](https://goreportcard.com/report/github.com/go-mods/tagsvar)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/go-mods/tagsvar/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-`tagsvar` is a Go module that generates Go code for managing struct tags. It reads the struct tags from your Go files and generates constants and variables that you can use in your code.
+`tagsvar` is a command line tool which reads the tags of the Go structs marked with a `// #tagsvar` comment and
+generates, next to each source file, a file of constants (the tag names) and variables (the tag options). The code
+can then refer to `JsonUserName` instead of repeating the `"name"` literal of a `json:"name"` tag.
 
-## Features
+Tags are split with [go-mods/tags](https://github.com/go-mods/tags).
 
-- Generates constants for struct tag names.
-- Generates variables for struct tag options.
-- Supports custom tag keys.
-- Organizes constants and variables by struct and tag key.
+<details>
+<summary>Table of contents</summary>
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Marking the structs](#marking-the-structs)
+- [Example](#example)
+- [Configuration](#configuration)
+- [Development](#development)
+- [License](#license)
+
+</details>
 
 ## Installation
 
-To install `tagsvar`, you can use `go get`:
+Prerequisite: Go 1.26 (`go` line of `go.mod`).
 
 ```bash
-go install github.com/go-mods/tagsvar
+go install github.com/go-mods/tagsvar@latest
 ```
 
 ## Usage
 
-This module provides two main commands for managing your struct tags: `clean` and `gen`.
-
-### Clean Command
-
-The `clean` command is used to remove all generated code files. This is useful when you want to regenerate all your code files from scratch.
-
-To use the `clean` command, navigate to your project directory and run:
-
 ```bash
-tagsvar clean
+tagsvar gen                     # generate the files of the current directory
+tagsvar gen -r                  # ... and of all its subdirectories
+tagsvar gen --dir ./models -r   # start from another directory
+
+tagsvar clean                   # delete the generated files of the current directory
+tagsvar clean --dir ./models -r -v
 ```
 
-or if you want to remove the generated code files from a specific directory, you can use the `--dir` flag:
+| Flag | Commands | Description |
+|---|---|---|
+| `-d`, `--dir` | `gen`, `clean` | Directory to process (default `.`). A file path selects its directory. |
+| `-r`, `--recursive` | `gen`, `clean` | Also process all subdirectories |
+| `-v`, `--verbose` | `gen`, `clean` | Print debug messages (`clean`: the deleted files) |
+| `-s`, `--silent` | `gen`, `clean` | Print nothing, except errors |
 
-```bash
-tagsvar clean --dir ".testdata" -r -v
-```
+`g` and `c` are aliases of `gen` and `clean`. `tagsvar --version` prints the version.
 
-### Gen Command
-The `gen` command is used to generate code files. This command reads the struct tags from your Go files and generates constants and variables that you can use in your code.
+`gen` reads every `.go` file of the directory, except test files (`_test.go`) and generated files, and writes
+`<name>.vars.go` next to each file holding at least one marked struct. Messages and errors are written to stderr;
+the exit code is 1 on error.
 
-To use the `gen` command, navigate to your project directory and run:
+`clean` deletes the files whose name matches the generated file name (`*.vars.go` by default), whatever their content:
+do not give this suffix to hand-written files.
 
-```bash
-tagsvar gen
-```
+## Marking the structs
 
-This will generate code files for all Go files in your project. The generated files will be placed in the same directory as the original Go files.
+A struct is processed only when its doc comment holds a `#tagsvar` line:
 
-or if you want to generate the code files in a specific directory, you can use the `--dir` flag:
+| Directive | Effect |
+|---|---|
+| `#tagsvar`, `#tagsvar:include`, `#tagsvar:include:all` | Every tag of the struct |
+| `#tagsvar:include:json,xml` | Only the listed tag keys |
+| `#tagsvar:exclude:xml` | Every tag except the listed keys |
+| `#tagsvar:exclude`, `#tagsvar:exclude:all` | Struct skipped (same as no directive) |
 
-```bash
-tagsvar gen --dir ".testdata" -r -v
-```
-
+The directive line is removed from the struct comment copied in the generated file.
 
 ## Example
-You can find examples of generated code in the .testdata directory.
 
-### author.go
+[.testdata/blog_author.go](.testdata/blog_author.go):
+
 ```go
-package testdata
-
 // Author is a struct that represents an author
 // #tagsvar
 type Author struct {
@@ -73,15 +84,24 @@ type Author struct {
     Name  string `json:"name"  xml:"name"  gorm:"name;type:varchar(255);not null"`
     Email string `json:"email" xml:"email" gorm:"email"`
 }
+
+// Blog is a struct that represents an author blog
+// #tagsvar:exclude:xml
+type Blog struct {
+    ID     int    `json:"id"     xml:"id"     gorm:"id"`
+    Author Author `json:"author" xml:"author" gorm:"author,embedded"`
+    Upvote int32  `json:"upvote" xml:"upvote" gorm:"upvote"`
+}
 ```
 
-### Generated Code
+`tagsvar gen` writes [.testdata/blog_author.vars.go](.testdata/blog_author.vars.go), which starts with:
+
 ```go
 // Code generated by tagsvar. DO NOT EDIT.
 
 package testdata
 
-// File: author.go
+// File: blog_author.go
 
 // Struct: Author
 // Author is a struct that represents an author
@@ -119,3 +139,32 @@ var (
     }
 )
 ```
+
+The constants of `Blog` follow, without the `xml` tag. An option without value is `nil`; the other values are strings.
+
+## Configuration
+
+| Environment variable | Default | Description |
+|---|---|---|
+| `TAGSVAR_PREFIX` | — | Prefix of the generated file names (`gen_` gives `gen_user.vars.go`) |
+| `TAGSVAR_SUFFIX` | `.vars` | Suffix of the generated file names, before `.go` |
+| `TAGSVAR_VERBOSE` | `false` | Same as `--verbose` |
+| `TAGSVAR_SILENT` | `false` | Same as `--silent` |
+
+`gen` and `clean` must run with the same prefix and suffix.
+
+## Development
+
+Prerequisite: [Task](https://taskfile.dev/installation/).
+
+```bash
+task go-tools:install   # golangci-lint and editorconfig-checker, at their pinned versions
+task go:default         # clean, format, vet, tidy, lint and test
+task go:test
+task go:lint
+task go:build           # binary in build/, with the version from git describe
+```
+
+## License
+
+MIT — see [LICENSE](LICENSE).

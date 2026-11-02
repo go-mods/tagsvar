@@ -8,8 +8,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/go-mods/tags v1.1.5 h1:GcDHiMAUEi6Ztp7w1MgqBVHi1sDz+MIYHsnoXaZPcnY=
 github.com/go-mods/tags v1.1.5/go.mod h1:z6hA6jJidWVxU+YElmCvv5/r14uumU8Ub96TEHmg2V4=
-github.com/go-mods/zerolog-quick v0.2.0 h1:GoMX1d1PzdcK3dbsAFp31LOYiy2lHpq8jZYXjZrYhZY=
-github.com/go-mods/zerolog-quick v0.2.0/go.mod h1:/4ADlUKHRLaOEoQkB34EywQkB8kUVtDvOdgZHcMgg7w=
+github.com/go-mods/zerolog-quick v0.3.0 h1:OgAfMYmruXI4gvjIwVQbjgKczv/qHZ+eRMo+DySxWG4=
+github.com/go-mods/zerolog-quick v0.3.0/go.mod h1:wiqL1R63bQxal8fbyMn4QlbUuI++qTF34ezgrJipWm4=
 github.com/golobby/cast v1.3.3 h1:s2Lawb9RMz7YyYf8IrfMQY4IFmA1R/lgfmj97Vc6fig=
 github.com/golobby/cast v1.3.3/go.mod h1:0oDO5IT84HTXcbLDf1YXuk0xtg/cRDrxhbpWKxwtJCY=
 github.com/golobby/config/v3 v3.4.2 h1:oIOSo24mC0A8f93ZTL24NDNw0hZ3Tbb34wc1ckn2CsA=
@@ -55,8 +55,9 @@ github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSS
 github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=
 github.com/stretchr/testify v1.7.1/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO+kdMU+MU=
-github.com/stretchr/testify v1.8.1 h1:w7B6lhMri9wdJUVmEZPGGhZzrYTPvgJArz7wNPgYKsk=
 github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
+github.com/stretchr/testify v1.8.4 h1:CcVxjf3Q8PM0mHUKJCdn+eZZtm5yQwehR5yeSVQQcUk=
+github.com/stretchr/testify v1.8.4/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
 github.com/xo/terminfo v1.3.0 h1:KstyePbNW6UaLq9y12+544VK4aTP3Eku/sym3a9+UgQ=
 github.com/xo/terminfo v1.3.0/go.mod h1:lGzkSo8Fe7IRh/w+Gqz7n5mDog4FVXCj3gy/DYTBqio=
 go.yaml.in/yaml/v3 v3.0.4/go.mod h1:DhzuOOF2ATzADvBadXxruRBLzYTpT36CKvDb3+aBEFg=

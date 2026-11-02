@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/go-mods/tags v1.1.5
-	github.com/go-mods/zerolog-quick v0.2.0
+	github.com/go-mods/zerolog-quick v0.3.0
 	github.com/golobby/cast v1.3.3
 	github.com/golobby/config/v3 v3.4.2
 	github.com/mattn/go-isatty v0.0.24
